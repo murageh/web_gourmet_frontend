@@ -2,17 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+
 :root {
+  --test: rgb( 245, 245, 230);
   --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
+  --background-start-rgb: 223, 223, 180;
   --background-end-rgb: 255, 255, 255;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --foreground-rgb: 245, 245, 230;
+    --background-start-rgb: 38, 38, 23;
+    --background-end-rgb: 23, 23, 8;
   }
 }
 
@@ -30,4 +32,8 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.input-bar:focus-within ~ button.submit {
+  background: #FFA500;
 }
