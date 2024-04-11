@@ -24,7 +24,7 @@ const Input = ({autoFocus, name, placeholder, type, className, fullWidth=true, v
                     name={name}
                     placeholder={placeholder}
                     required={required}
-                    className={`${className || ''} flex-grow px-4 py-3 placeholder-grey-dark text-bg-dark relative bg-white rounded-md text-sm border-2 border-input-border outline-none focus:outline-none focus:border-primary focus:shadow-outline w-full disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed`}
+                    className={`${className || ''} flex-grow px-4 py-3 placeholder-grey-dark text-bg-dark relative bg-white rounded-md text-sm border-2 border-input-border outline-none focus:outline-none focus:border-primary focus:shadow-outline w-full disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed disabled:text-black`}
                     {...value ? {value} : {}}
                     onChange={onChange}
                     {...(rest ? rest : {}) }
