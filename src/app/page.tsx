@@ -6,11 +6,9 @@ import {Loader} from "@/components/shared/Loader";
 import WithToastContainer from "@/HOCs/WithToastContainer";
 import {submitQuestion, submitUrl} from "@/services";
 import {toast} from "react-toastify";
-
-interface Response {
-    question: string;
-    answer: string;
-}
+import {WithRedux} from "@/HOCs/WithRedux";
+import {useAppDispatch, useAppSelector} from '@/state/hooks';
+import {addResponse, clearCurrentWebsite, clearResponses, setCurrentWebsite} from "@/state/features/websitesSlice";
 
 function Home() {
     const urlRef = React.useRef<HTMLInputElement | null>(null);
@@ -18,27 +16,26 @@ function Home() {
     const buttonRef = React.useRef<HTMLButtonElement | null>(null);
     const submitQuestionRef = React.useRef<HTMLButtonElement | null>(null);
     const [loading, setLoading] = React.useState(true);
-    const [responses, setResponses] = React.useState<Response[]>([]);
-    const [hasSubmittedWebsite, setHasSubmittedWebsite] = React.useState(false);
+
+    const {responses, currentWebsite} = useAppSelector((state) => state.responses);
+    const dispatch = useAppDispatch();
+    const hasSubmittedWebsite = !!currentWebsite;
 
     const reset = () => {
         setLoading(false);
-        setResponses([]);
-        setHasSubmittedWebsite(false);
-        localStorage.removeItem('url');
-        localStorage.removeItem('responses');
+        dispatch(clearResponses());
+        dispatch(clearCurrentWebsite());
     }
 
     const handleSubmitUrl = async () => {
         urlRef.current?.blur();
         setLoading(true);
         const url = urlRef?.current?.value;
-        console.log({url});
+        // console.log({url});
         const response = await submitUrl(url);
         console.log({response});
         if (response.success) {
-            setHasSubmittedWebsite(true);
-            localStorage.setItem('url', url || '');
+            dispatch(setCurrentWebsite(url || ''));
             toast.success('You can now ask me anything');
         } else {
             console.log('error', response.error);
@@ -64,7 +61,7 @@ function Home() {
         setLoading(true);
         const url = urlRef?.current?.value;
         const question = questionRef?.current?.value;
-        console.log({question, url});
+        // console.log({question, url});
 
         if (!question) {
             toast.error('Please enter a question');
@@ -78,14 +75,12 @@ function Home() {
 
         const response = await submitQuestion(question, url);
         if (response.success) {
-            setResponses([...responses, {
-                question,
-                answer: response.data.message
-            }]);
-            localStorage.setItem('responses', JSON.stringify([...responses, {
-                question,
-                answer: response.data.message
-            }]));
+            dispatch(addResponse(
+                {
+                    question,
+                    answer: response.data.message
+                }
+            ));
             // clear the input field
             questionRef.current!.value = '';
             // scroll to the bottom of the div
@@ -101,18 +96,12 @@ function Home() {
     }
 
     React.useEffect(() => {
-        const url = localStorage.getItem('url');
-        const responses = localStorage.getItem('responses');
-        if (url) {
-            urlRef.current!.value = url;
-            setHasSubmittedWebsite(true);
-        }
-        if (responses) {
-            setResponses(JSON.parse(responses));
-        }
-
         setLoading(false);
-    }, []);
+
+        if (hasSubmittedWebsite) {
+            urlRef.current!.value = currentWebsite!;
+        }
+    }, [currentWebsite, hasSubmittedWebsite]);
 
     return (
         <main
@@ -215,8 +204,10 @@ function Home() {
 
 export default function Homepage() {
     return (
-        <WithToastContainer>
-            <Home/>
-        </WithToastContainer>
+        <WithRedux>
+            <WithToastContainer>
+                <Home/>
+            </WithToastContainer>
+        </WithRedux>
     );
 }
