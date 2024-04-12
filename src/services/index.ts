@@ -55,4 +55,6 @@ export const submitQuestion = async (question: string, url: string) => {
     }
 
     return {...response} as const;
+    // exporting as const for more convenient typechecking during usage,
+    // as opposed to declaring custom types
 }

@@ -8,8 +8,9 @@ import {PersistGate} from 'redux-persist/integration/react';
 /**
  * This component renders its children with the redux store
  * This is useful for client components that need to access the redux store.
+ * @param children
+ * @constructor
  */
-
 export const WithRedux = ({children}: { children: React.ReactNode }) => {
     return (
         <Provider store={store}>

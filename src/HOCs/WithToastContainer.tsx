@@ -5,6 +5,11 @@ import React from 'react';
 
 import 'react-toastify/dist/ReactToastify.min.css';
 
+/**
+ * This component wraps the children in a toastable container, in that you can show toast notifications.
+ * @param children
+ * @constructor
+ */
 const WithToastContainer = ({children}: { children: React.ReactNode }) => {
     return (
         <>
