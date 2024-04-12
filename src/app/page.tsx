@@ -86,6 +86,13 @@ function Home() {
             // scroll to the bottom of the div
             const lastElement = document.getElementById('lastQuestion');
             lastElement?.scrollIntoView({behavior: "smooth"});
+            // The following is a hack to ensure the element scrolls.
+            // Let's scroll the parent to its end as well.
+            // This bug is as a result of the CSS change.
+            // Should be re-thought to avoid this.
+            // But here we go...
+            const parentElement = document.getElementById('answersDiv');
+            parentElement?.scrollTo({top: parentElement.scrollHeight, behavior: "smooth"});
             // focus on the input field
             questionRef.current?.focus();
         } else {
